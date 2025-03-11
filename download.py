@@ -12,9 +12,12 @@ def hook(d: dict) -> None:
     if d['status'] == 'finished':
         song_title = d.get('info_dict', {}).get('title', None)
         if song_title:
-            with open('etc/songs.txt', 'a', encoding='utf-8') as ds_f:
+            with open('etc/downloaded_songs.txt', 'a', encoding='utf-8') as ds_f:
                 ds_f.write(song_title + '\n')
-            upload(song_title)
+            text = upload(song_title)
+            if 'created' in text:
+                with open('etc/uploaded_songs.txt', 'a', encoding='utf-8') as as_f:
+                    as_f.write(song_title + '\n')
 
 def download() -> None:
     url1 = 'https://www.youtube.com/playlist?list=PLcLWzrwuuZhP-qE-ttdWn0x8ANgR8xzpC'

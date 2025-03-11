@@ -1,8 +1,12 @@
 from http.cookiejar import CookieJar
 from typing import Optional
 import browser_cookie3
+from yandex_cookie import Yandex, yandex
 import sys
 import os
+
+browser_cookie3.yandex = yandex
+browser_cookie3.Yandex = Yandex
 
 COOKIES_FILE = 'etc/cookies'
 
@@ -14,6 +18,7 @@ def get_browser_cookies() -> Optional[CookieJar]:
         1: browser_cookie3.firefox,
         2: browser_cookie3.chrome,
         3: browser_cookie3.edge,
+        4: browser_cookie3.yandex,
     }
 
     while True:
@@ -22,10 +27,11 @@ def get_browser_cookies() -> Optional[CookieJar]:
                 '[1] firefox\n'
                 '[2] chrome\n'
                 '[3] edge\n'
+                '[4] yandex\n'
                 '[0] exit\n'
                 'Choose your main browser: '
             ))
-            if browser_id < 0 or browser_id > 3:
+            if browser_id < 0 or browser_id > 4:
                 raise ValueError
             elif browser_id == 0:
                 return None
