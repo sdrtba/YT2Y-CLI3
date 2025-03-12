@@ -3,6 +3,7 @@ from yt_dlp import YoutubeDL
 import os
 from transfer import upload
 
+UPLOAD = True
 LOG_FILE = 'etc/download.log'
 ARCHIVE_FILE = 'etc/archive.txt'
 COOKIE_FILE = 'etc/cookies'
@@ -14,10 +15,16 @@ def hook(d: dict) -> None:
         if song_title:
             with open('etc/downloaded_songs.txt', 'a', encoding='utf-8') as ds_f:
                 ds_f.write(song_title + '\n')
-            text = upload(song_title)
-            if 'created' in text:
-                with open('etc/uploaded_songs.txt', 'a', encoding='utf-8') as as_f:
-                    as_f.write(song_title + '\n')
+
+            if UPLOAD:
+                text = upload(song_title)
+                if 'created' in text:
+                    with open('etc/uploaded_songs.txt', 'a', encoding='utf-8') as as_f:
+                        as_f.write(song_title + '\n')
+
+def dont_upload() -> None:
+    global UPLOAD
+    UPLOAD = False
 
 def download() -> None:
     url1 = 'https://www.youtube.com/playlist?list=PLcLWzrwuuZhP-qE-ttdWn0x8ANgR8xzpC'

@@ -12,6 +12,16 @@ SONGS_DIR = 'output'
 TOKEN_FILE = 'etc/token.sec'
 KIND_FILE = 'etc/kind'
 
+def exist_upload() -> None:
+    try:
+        contents = os.listdir(SONGS_DIR)
+        for content in contents:
+            upload(content)
+    except FileNotFoundError:
+        print('\033[91mПапка output не найдена\033[0m')
+    except PermissionError:
+        print('\033[91mНет доступа к папке output\033[0m')
+
 def check_kind():
     if not os.path.exists(KIND_FILE):
         print('\033[91mKIND не найден\033[0m')
