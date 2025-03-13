@@ -5,6 +5,7 @@ from json import loads
 import requests
 import hashlib
 import os
+import sys
 
 TOKEN = None
 KIND = None
@@ -13,10 +14,21 @@ TOKEN_FILE = 'etc/token.sec'
 KIND_FILE = 'etc/kind'
 
 def exist_upload() -> None:
+    t = ""
+    with open('etc/1.txt', 'r', encoding='utf-8') as file:
+        t = file.read()
+
+
     try:
         contents = os.listdir(SONGS_DIR)
         for content in contents:
-            upload(content)
+            if content in t:
+                continue
+            else:
+                print(''.join(content.split('.m4a')[0:-1]))
+                upload(''.join(content.split('.m4a')[0:-1]))
+                with open('etc/1.txt', 'a', encoding='utf-8') as file:
+                    file.write(content+'\n')
     except FileNotFoundError:
         print('\033[91mПапка output не найдена\033[0m')
     except PermissionError:
@@ -86,7 +98,13 @@ def set_token() -> None:
 def get_target(filename: str) -> str:
     headers = {'Authorization': f'Bearer {TOKEN}'}
     url = f'https://music.yandex.ru/handlers/ugc-upload.jsx?kind={KIND}&filename={filename}'
-    return loads(requests.get(url, headers=headers).text).get('post-target')
+    text = requests.get(url, headers=headers).text
+    try:
+        target = text[text.find('post-target') + 14:text.find('ugc-track-id') - 3]
+        return target
+    except:
+        print(text, target)
+        sys.exit(0)
 
 def upload(filename: str) -> str:
     if KIND is None:

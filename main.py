@@ -14,9 +14,9 @@ def main() -> None:
 
     set_kind() if '--set-kind' in sys.argv else check_kind()
 
-    dont_upload if '--download' in sys.argv else download()
+    #dont_upload if '--download' in sys.argv else download()
 
-    exist_upload if '--upload' in sys.argv else download()
+    exist_upload() if '--upload' in sys.argv else download()
 
 if __name__ == '__main__':
     main()
